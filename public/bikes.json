@@ -13,10 +13,10 @@
     },
     {
         "id": 2,
-        "name": "Kawasaki Z900",
+        "name": "Kawasaki Z800",
         "brand": "Kawasaki",
         "price": 9000,
-        "description": "The Kawasaki Z900 is a standard motorcycle in the Z series by Kawasaki with a powerful engine.",
+        "description": "The Kawasaki Z800 is a standard motorcycle in the Z series by Kawasaki with a powerful engine.",
         "rating": 4.5,
         "warranty": "2 years",
         "product_creation_date": "2017-03-20",
