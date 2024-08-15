@@ -1,3 +1,5 @@
+import { Link } from "react-router-dom";
+
 const Navbar = () => {
     return (
         <div>
@@ -8,12 +10,14 @@ const Navbar = () => {
                 <div className="flex-none">
                     <ul className="menu menu-horizontal px-1 gap-4">
                         <li><a className="text-black bg-sky-200/65 btn text-2xl font-semibold px-4">Log In</a></li>
-                        <li><a className="text-black bg-lime-200/65 btn text-2xl font-semibold px-4">Register</a></li>
+                        <Link to="/register">
+                            <li><a className="text-black bg-lime-200/65 btn text-2xl font-semibold px-4">Register</a></li>
+                        </Link>
                     </ul>
                 </div>
             </div>
             <div className="">
-            <div className="divider mt-[-6px]"></div>
+                <div className="divider mt-[-6px]"></div>
             </div>
         </div>
     );
