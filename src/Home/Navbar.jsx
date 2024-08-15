@@ -12,6 +12,9 @@ const Navbar = () => {
                     </ul>
                 </div>
             </div>
+            <div className="">
+            <div className="divider mt-[-6px]"></div>
+            </div>
         </div>
     );
 };
