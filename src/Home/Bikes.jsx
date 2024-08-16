@@ -10,6 +10,7 @@ const Bikes = () => {
     const [category, setCategory] = useState("");
     const [priceRange, setPriceRange] = useState("");
     const [filteredBikes, setFilteredBikes] = useState([]);
+    const [sortOrder, setSortOrder] = useState("");
 
     useEffect(() => {
         fetch('bikes.json')
@@ -17,37 +18,61 @@ const Bikes = () => {
             .then(data => {
                 setBikes(data);
                 setFilteredBikes(data);
-            });
+            })
+            .catch(error => console.error("Error fetching bikes data:", error));
     }, []);
 
     useEffect(() => {
-        filterBikes();
-    }, [brand, category, priceRange]);
+    filterBikes();
+}, [searchTerm, brand, category, priceRange]);  // Removed sortOrder from the dependencies
 
-    const filterBikes = () => {
-        let results = bikes;
+useEffect(() => {
+    sortBikes();
+}, [sortOrder]);   
 
-        if (brand) {
-            results = results.filter(bike => bike.brand === brand);
-        }
+const filterBikes = () => {
+    let results = bikes;
 
-        if (category) {
-            results = results.filter(bike => bike.category === category);
-        }
-
-        if (priceRange) {
-            const [minPrice, maxPrice] = priceRange.split('-').map(Number);
-            results = results.filter(bike => bike.price >= minPrice && bike.price <= maxPrice);
-        }
-
-        setFilteredBikes(results);
-    };
-
-    const handleSearch = () => {
-        const results = bikes.filter(bike =>
+    if (searchTerm) {
+        results = results.filter(bike =>
             bike.name.toLowerCase().includes(searchTerm.toLowerCase())
         );
-        setFilteredBikes(results);
+    }
+
+    if (brand) {
+        results = results.filter(bike => bike.brand === brand);
+    }
+
+    if (category) {
+        results = results.filter(bike => bike.category === category);
+    }
+
+    if (priceRange) {
+        const [minPrice, maxPrice] = priceRange.split('-').map(Number);
+        if (!isNaN(minPrice) && !isNaN(maxPrice)) {
+            results = results.filter(bike => bike.price >= minPrice && bike.price <= maxPrice);
+        }
+    }
+
+    setFilteredBikes(results);
+};
+
+const sortBikes = () => {
+    let results = [...filteredBikes]; // Copy the filtered bikes
+
+    if (sortOrder === "low-to-high") {
+        results = results.sort((a, b) => a.price - b.price);
+    } else if (sortOrder === "high-to-low") {
+        results = results.sort((a, b) => b.price - a.price);
+    } else if (sortOrder === "newest-first") {
+        results = results.sort((a, b) => new Date(b.product_creation_date) - new Date(a.product_creation_date));
+    }
+
+    setFilteredBikes(results);  // Update the filtered bikes with the sorted results
+};
+
+    const handleSearch = () => {
+        filterBikes();
     };
 
     const handleReset = () => {
@@ -55,6 +80,7 @@ const Bikes = () => {
         setBrand("");
         setCategory("");
         setPriceRange("");
+        setSortOrder("");
         setFilteredBikes(bikes);
     };
 
@@ -123,7 +149,18 @@ const Bikes = () => {
                     <option value="20001-30000">20001-30000$</option>
                     <option value="30001-40000">30001-40000$</option>
                 </select>
-                
+                <select
+                    className="ml-4 px-4 py-2 border border-gray-300 shadow-xl rounded"
+                    value={sortOrder}
+                    onChange={(e) => setSortOrder(e.target.value)}
+                >
+                    <option value="">Sort By</option>
+                    <option value="low-to-high">Price: Low to High</option>
+                    <option value="high-to-low">Price: High to Low</option>
+                    <option value="newest-first">Date Added: Newest First</option>
+                </select>
+
+
                 <button
                     onClick={handleReset}
                     className="ml-4 px-4 py-2 font-semibold bg-gray-500 text-white rounded shadow-xl"
@@ -135,25 +172,25 @@ const Bikes = () => {
             {filteredBikes.length === 0 ? (
                 <p className="text-2xl text-center">No Bikes found</p>
             ) : (
-                <div className="grid grid-cols-3 gap-3">
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
                     {filteredBikes.map(bike => (
                         <div key={bike.id}>
-                            <div className="card card-compact bg-sky-100/35 w-96 shadow-xl">
-                                <img src={bike.image} alt="" className="h-64 rounded-t-xl" />
-                                <div className="card-body h-72 text-xl">
+                            <div className="card card-compact bg-sky-100/35 w-full shadow-xl">
+                                <img src={bike.image} alt="" className="h-64 w-full rounded-t-xl object-cover" />
+                                <div className="card-body text-xl">
                                     <h2 className="card-title text-3xl font-semibold">{bike.name}</h2>
                                     <div className="flex justify-between">
-                                        <h2 className="text-xl"><span className="font-semibold">Brand :</span> {bike.brand}</h2>
-                                        <h2 className="text-xl"><span className="font-semibold">Category :</span> {bike.category}</h2>
+                                        <h2 className="text-xl"><span className="font-semibold">Brand:</span> {bike.brand}</h2>
+                                        <h2 className="text-xl"><span className="font-semibold">Category:</span> {bike.category}</h2>
                                     </div>
-                                    <p className="text-lg">{bike.description}</p>
-                                    <div className="flex justify-between gap-24 text-lg">
+                                    <p className="text-lg mt-2">{bike.description}</p>
+                                    <div className="flex justify-between mt-4 text-lg">
                                         <p className="flex gap-2 items-center"><FaRegStar /> {bike.rating}</p>
                                         <p className="flex gap-2 items-center"><CiCalendarDate /> {bike.product_creation_date}</p>
                                     </div>
-                                    <div className="flex justify-between gap-24 text-lg">
+                                    <div className="flex justify-between mt-2 text-lg">
                                         <p className="flex gap-2 items-center"><IoPricetags /> {bike.price}$</p>
-                                        <p><span className="font-semibold">Warranty : </span>{bike.warranty}</p>
+                                        <p><span className="font-semibold">Warranty:</span> {bike.warranty}</p>
                                     </div>
                                 </div>
                             </div>
