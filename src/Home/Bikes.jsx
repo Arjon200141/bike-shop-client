@@ -6,6 +6,9 @@ import { IoPricetags } from "react-icons/io5";
 const Bikes = () => {
     const [bikes, setBikes] = useState([]);
     const [searchTerm, setSearchTerm] = useState("");
+    const [brand, setBrand] = useState("");
+    const [category, setCategory] = useState("");
+    const [priceRange, setPriceRange] = useState("");
     const [filteredBikes, setFilteredBikes] = useState([]);
 
     useEffect(() => {
@@ -18,11 +21,42 @@ const Bikes = () => {
     }, []);
 
     useEffect(() => {
+        filterBikes();
+    }, [brand, category, priceRange]);
+
+    const filterBikes = () => {
+        let results = bikes;
+
+        if (brand) {
+            results = results.filter(bike => bike.brand === brand);
+        }
+
+        if (category) {
+            results = results.filter(bike => bike.category === category);
+        }
+
+        if (priceRange) {
+            const [minPrice, maxPrice] = priceRange.split('-').map(Number);
+            results = results.filter(bike => bike.price >= minPrice && bike.price <= maxPrice);
+        }
+
+        setFilteredBikes(results);
+    };
+
+    const handleSearch = () => {
         const results = bikes.filter(bike =>
             bike.name.toLowerCase().includes(searchTerm.toLowerCase())
         );
         setFilteredBikes(results);
-    }, [searchTerm, bikes]);
+    };
+
+    const handleReset = () => {
+        setSearchTerm("");
+        setBrand("");
+        setCategory("");
+        setPriceRange("");
+        setFilteredBikes(bikes);
+    };
 
     return (
         <div className="mx-8 my-16">
@@ -41,11 +75,68 @@ const Bikes = () => {
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
                 />
+                <button
+                    onClick={handleSearch}
+                    className="ml-4 px-4 py-2 font-semibold bg-blue-500 text-white rounded shadow-xl"
+                >
+                    Search
+                </button>
+                <select
+                    className="ml-4 px-4 py-2 border border-gray-300 shadow-xl rounded"
+                    value={brand}
+                    onChange={(e) => setBrand(e.target.value)}
+                >
+                    <option value="">Select Brand</option>
+                    <option value="Kawasaki">Kawasaki</option>
+                    <option value="BMW">BMW</option>
+                    <option value="Yamaha">Yamaha</option>
+                    <option value="Suzuki">Suzuki</option>
+                    <option value="KTM">KTM</option>
+                    <option value="Bajaj">Bajaj</option>
+                    <option value="Apache">Apache</option>
+                </select>
+                <select
+                    className="ml-4 px-4 py-2 border border-gray-300 shadow-xl rounded"
+                    value={category}
+                    onChange={(e) => setCategory(e.target.value)}
+                >
+                    <option value="">Select Category</option>
+                    <option value="SuperSport">SuperSport</option>
+                    <option value="Standard">Standard</option>
+                    <option value="Sport">Sport</option>
+                    <option value="Adventure">Adventure</option>
+                    <option value="Naked">Naked</option>
+                    <option value="Touring">Touring</option>
+                    <option value="Cruiser">Cruiser</option>
+                    <option value="Sport Heritage">Sport Heritage</option>
+                    <option value="Commuter">Road</option>
+                </select>
+                <select
+                    className="ml-4 px-4 py-2 border border-gray-300 shadow-xl rounded"
+                    value={priceRange}
+                    onChange={(e) => setPriceRange(e.target.value)}
+                >
+                    <option value="">Select Price Range</option>
+                    <option value="0-5000">0-5000$</option>
+                    <option value="5001-10000">5001-10000$</option>
+                    <option value="10001-20000">10001-20000$</option>
+                    <option value="20001-30000">20001-30000$</option>
+                    <option value="30001-40000">30001-40000$</option>
+                </select>
+                
+                <button
+                    onClick={handleReset}
+                    className="ml-4 px-4 py-2 font-semibold bg-gray-500 text-white rounded shadow-xl"
+                >
+                    Reset
+                </button>
             </div>
 
-            <div className="grid grid-cols-3 gap-3">
-                {
-                    filteredBikes.map(bike => (
+            {filteredBikes.length === 0 ? (
+                <p className="text-2xl text-center">No Bikes found</p>
+            ) : (
+                <div className="grid grid-cols-3 gap-3">
+                    {filteredBikes.map(bike => (
                         <div key={bike.id}>
                             <div className="card card-compact bg-sky-100/35 w-96 shadow-xl">
                                 <img src={bike.image} alt="" className="h-64 rounded-t-xl" />
@@ -67,9 +158,9 @@ const Bikes = () => {
                                 </div>
                             </div>
                         </div>
-                    ))
-                }
-            </div>
+                    ))}
+                </div>
+            )}
         </div>
     );
 };

@@ -3,7 +3,7 @@
         "id": 1,
         "name": "Kawasaki Ninja H2R",
         "brand": "Kawasaki",
-        "price": 55000,
+        "price": 37000,
         "description": "The Kawasaki Ninja H2R is a supercharged supersport class motorcycle in the Ninja sportbike series.",
         "rating": 4.9,
         "warranty": "2 years",
@@ -357,7 +357,7 @@
         "warranty": "2 years",
         "product_creation_date": "2019-08-05",
         "image": "https://i.ibb.co/3S5XxSL/34.jpg",
-        "category": "Sport Touring"
+        "category": "Touring"
     },
     {
         "id": 35,
@@ -369,7 +369,7 @@
         "warranty": "3 years",
         "product_creation_date": "2018-11-10",
         "image": "https://i.ibb.co/r2HnL63/35.webp",
-        "category": "Supermoto"
+        "category": "Sport Heritage"
     },
     {
         "id": 36,
@@ -381,7 +381,7 @@
         "warranty": "3 years",
         "product_creation_date": "2019-02-15",
         "image": "https://i.ibb.co/sQ0J9rV/36.jpg",
-        "category": "Cruiser"
+        "category": "Sport Heritage"
     },
     {
         "id": 37,
@@ -393,7 +393,7 @@
         "warranty": "2 years",
         "product_creation_date": "2018-06-10",
         "image": "https://i.ibb.co/WnbDG2X/37.jpg",
-        "category": "Enduro"
+        "category": "Sport"
     },
     {
         "id": 38,
@@ -405,7 +405,7 @@
         "warranty": "2 years",
         "product_creation_date": "2019-09-05",
         "image": "https://i.ibb.co/qmvM4SX/38.jpg",
-        "category": "Dual-Sport"
+        "category": "Sport"
     },
     {
         "id": 39,
@@ -501,7 +501,7 @@
         "warranty": "3 years",
         "product_creation_date": "2018-11-10",
         "image": "https://i.ibb.co/dknsvb4/46.jpg",
-        "category": "Sport Touring"
+        "category": "Sport Heritage"
     },
     {
         "id": 47,
@@ -513,7 +513,7 @@
         "warranty": "2 years",
         "product_creation_date": "2017-04-15",
         "image": "https://i.ibb.co/c10F2LS/47.jpg",
-        "category": "Sport Touring"
+        "category": "Sport Heritage"
     },
     {
         "id": 48,
@@ -549,7 +549,7 @@
         "warranty": "3 years",
         "product_creation_date": "2018-05-10",
         "image": "https://i.ibb.co/FnWB92b/50.jpg",
-        "category": "Motocross"
+        "category": "Sport Heritage"
     },
     {
         "id": 51,
@@ -573,7 +573,7 @@
         "warranty": "2 years",
         "product_creation_date": "2018-08-20",
         "image": "https://i.ibb.co/0mJzwfC/52.webp",
-        "category": "Dual-Sport"
+        "category": "Sport"
     },
     {
         "id": 53,
