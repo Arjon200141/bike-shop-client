@@ -11,9 +11,11 @@ const Bikes = () => {
     const [priceRange, setPriceRange] = useState("");
     const [filteredBikes, setFilteredBikes] = useState([]);
     const [sortOrder, setSortOrder] = useState("");
+    const [currentPage, setCurrentPage] = useState(1);
+    const itemsPerPage = 6;
 
     useEffect(() => {
-        fetch('bikes.json')
+        fetch('http://localhost:5000/bikes')
             .then(res => res.json())
             .then(data => {
                 setBikes(data);
@@ -23,53 +25,57 @@ const Bikes = () => {
     }, []);
 
     useEffect(() => {
-    filterBikes();
-}, [searchTerm, brand, category, priceRange]);  // Removed sortOrder from the dependencies
+        filterBikes();
+    }, [searchTerm, brand, category, priceRange]);
 
-useEffect(() => {
-    sortBikes();
-}, [sortOrder]);   
+    useEffect(() => {
+        sortBikes();
+    }, [sortOrder]);
 
-const filterBikes = () => {
-    let results = bikes;
+    useEffect(() => {
+        setCurrentPage(1);
+    }, [searchTerm, brand, category, priceRange, sortOrder]);
 
-    if (searchTerm) {
-        results = results.filter(bike =>
-            bike.name.toLowerCase().includes(searchTerm.toLowerCase())
-        );
-    }
+    const filterBikes = () => {
+        let results = bikes;
 
-    if (brand) {
-        results = results.filter(bike => bike.brand === brand);
-    }
-
-    if (category) {
-        results = results.filter(bike => bike.category === category);
-    }
-
-    if (priceRange) {
-        const [minPrice, maxPrice] = priceRange.split('-').map(Number);
-        if (!isNaN(minPrice) && !isNaN(maxPrice)) {
-            results = results.filter(bike => bike.price >= minPrice && bike.price <= maxPrice);
+        if (searchTerm) {
+            results = results.filter(bike =>
+                bike.name.toLowerCase().includes(searchTerm.toLowerCase())
+            );
         }
-    }
 
-    setFilteredBikes(results);
-};
+        if (brand) {
+            results = results.filter(bike => bike.brand === brand);
+        }
 
-const sortBikes = () => {
-    let results = [...filteredBikes]; // Copy the filtered bikes
+        if (category) {
+            results = results.filter(bike => bike.category === category);
+        }
 
-    if (sortOrder === "low-to-high") {
-        results = results.sort((a, b) => a.price - b.price);
-    } else if (sortOrder === "high-to-low") {
-        results = results.sort((a, b) => b.price - a.price);
-    } else if (sortOrder === "newest-first") {
-        results = results.sort((a, b) => new Date(b.product_creation_date) - new Date(a.product_creation_date));
-    }
+        if (priceRange) {
+            const [minPrice, maxPrice] = priceRange.split('-').map(Number);
+            if (!isNaN(minPrice) && !isNaN(maxPrice)) {
+                results = results.filter(bike => bike.price >= minPrice && bike.price <= maxPrice);
+            }
+        }
 
-    setFilteredBikes(results);  // Update the filtered bikes with the sorted results
-};
+        setFilteredBikes(results);
+    };
+
+    const sortBikes = () => {
+        let results = [...filteredBikes];
+
+        if (sortOrder === "low-to-high") {
+            results = results.sort((a, b) => a.price - b.price);
+        } else if (sortOrder === "high-to-low") {
+            results = results.sort((a, b) => b.price - a.price);
+        } else if (sortOrder === "newest-first") {
+            results = results.sort((a, b) => new Date(b.product_creation_date) - new Date(a.product_creation_date));
+        }
+
+        setFilteredBikes(results);
+    };
 
     const handleSearch = () => {
         filterBikes();
@@ -82,6 +88,18 @@ const sortBikes = () => {
         setPriceRange("");
         setSortOrder("");
         setFilteredBikes(bikes);
+        setCurrentPage(1);
+    };
+
+    const indexOfLastBike = currentPage * itemsPerPage;
+    const indexOfFirstBike = indexOfLastBike - itemsPerPage;
+    const currentBikes = filteredBikes.slice(indexOfFirstBike, indexOfLastBike);
+    const totalPages = Math.ceil(filteredBikes.length / itemsPerPage);
+
+    const handlePageChange = (pageNumber) => {
+        if (pageNumber >= 1 && pageNumber <= totalPages) {
+            setCurrentPage(pageNumber);
+        }
     };
 
     return (
@@ -160,7 +178,6 @@ const sortBikes = () => {
                     <option value="newest-first">Date Added: Newest First</option>
                 </select>
 
-
                 <button
                     onClick={handleReset}
                     className="ml-4 px-4 py-2 font-semibold bg-gray-500 text-white rounded shadow-xl"
@@ -169,11 +186,11 @@ const sortBikes = () => {
                 </button>
             </div>
 
-            {filteredBikes.length === 0 ? (
+            {currentBikes.length === 0 ? (
                 <p className="text-2xl text-center">No Bikes found</p>
             ) : (
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-                    {filteredBikes.map(bike => (
+                    {currentBikes.map(bike => (
                         <div key={bike.id}>
                             <div className="card card-compact bg-sky-100/35 w-full shadow-xl">
                                 <img src={bike.image} alt="" className="h-64 w-full rounded-t-xl object-cover" />
@@ -198,6 +215,24 @@ const sortBikes = () => {
                     ))}
                 </div>
             )}
+
+            <div className="flex justify-center my-8">
+                <button
+                    onClick={() => handlePageChange(currentPage - 1)}
+                    className="px-4 py-2 mx-2 font-semibold bg-blue-500 text-white rounded shadow-xl disabled:opacity-50"
+                    disabled={currentPage === 1}
+                >
+                    Previous
+                </button>
+                <span className="px-4 py-2">{currentPage} / {totalPages}</span>
+                <button
+                    onClick={() => handlePageChange(currentPage + 1)}
+                    className="px-4 py-2 mx-2 font-semibold bg-blue-500 text-white rounded shadow-xl disabled:opacity-50"
+                    disabled={currentPage === totalPages}
+                >
+                    Next
+                </button>
+            </div>
         </div>
     );
 };
