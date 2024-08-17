@@ -4,8 +4,8 @@ import { AuthContext } from "../Authentication/AuthProviders";
 import { toast } from "react-toastify";
 
 const Navbar = () => {
-    const { user,logOut } = useContext(AuthContext);
-    const navigate=useNavigate();
+    const { user, logOut } = useContext(AuthContext);
+    const navigate = useNavigate();
     const handleSignOut = () => {
         logOut()
             .then(() => {
@@ -25,7 +25,8 @@ const Navbar = () => {
                 <div className="flex-none">
                     {
                         user ?
-                            <Link>
+                            <Link className="flex items-center justify-center gap-4">
+                                <p className="text-lg font-semibold mr-2">{user.displayName}</p>
                                 <li><button onClick={handleSignOut} className="text-black bg-yellow-200/65 btn text-2xl font-semibold px-4">Log Out</button></li>
                             </Link> :
                             <ul className="menu menu-horizontal px-1 gap-4">

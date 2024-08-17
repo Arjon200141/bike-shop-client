@@ -25,7 +25,7 @@ const Bikes = () => {
             limit: itemsPerPage,
         });
 
-        fetch(`http://localhost:5000/bikes?${queryParams.toString()}`)
+        fetch(`https://motorhub-server.vercel.app/bikes?${queryParams.toString()}`)
             .then(res => res.json())
             .then(data => {
                 setBikes(data.bikes);
@@ -54,23 +54,23 @@ const Bikes = () => {
     };
 
     return (
-        <div className="mx-8 my-16">
+        <div className="md:mx-8 my-16">
             <div className="mb-8 text-center">
                 <input
                     type="text"
                     placeholder="Search for a bike"
-                    className="px-4 py-2 border border-gray-300 shadow-xl rounded"
+                    className="md:px-4 py-2 border border-gray-300 shadow-xl rounded"
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
                 />
                 <button
                     onClick={handleSearch}
-                    className="ml-4 px-4 py-2 font-semibold bg-blue-500 text-white rounded shadow-xl"
+                    className="md:ml-4 md:px-4 py-2 font-semibold bg-blue-500 text-white rounded shadow-xl"
                 >
                     Search
                 </button>
                 <select
-                    className="ml-4 px-4 py-2 border border-gray-300 shadow-xl rounded"
+                    className="md:ml-4 md:px-4 py-2 border border-gray-300 shadow-xl rounded"
                     value={brand}
                     onChange={(e) => setBrand(e.target.value)}
                 >
@@ -84,7 +84,7 @@ const Bikes = () => {
                     <option value="Apache">Apache</option>
                 </select>
                 <select
-                    className="ml-4 px-4 py-2 border border-gray-300 shadow-xl rounded"
+                    className="md:ml-4 md:px-4 py-2 border border-gray-300 shadow-xl rounded"
                     value={category}
                     onChange={(e) => setCategory(e.target.value)}
                 >
@@ -100,7 +100,7 @@ const Bikes = () => {
                     <option value="Commuter">Road</option>
                 </select>
                 <select
-                    className="ml-4 px-4 py-2 border border-gray-300 shadow-xl rounded"
+                    className="md:ml-4 md:px-4 py-2 border border-gray-300 shadow-xl rounded"
                     value={priceRange}
                     onChange={(e) => setPriceRange(e.target.value)}
                 >
@@ -112,7 +112,7 @@ const Bikes = () => {
                     <option value="30001-40000">30001-40000$</option>
                 </select>
                 <select
-                    className="ml-4 px-4 py-2 border border-gray-300 shadow-xl rounded"
+                    className="md:ml-4 md:px-4 py-2 border border-gray-300 shadow-xl rounded"
                     value={sortOrder}
                     onChange={(e) => setSortOrder(e.target.value)}
                 >
@@ -124,7 +124,7 @@ const Bikes = () => {
 
                 <button
                     onClick={handleReset}
-                    className="ml-4 px-4 py-2 font-semibold bg-gray-500 text-white rounded shadow-xl"
+                    className="md:ml-4 md:px-4 py-2 font-semibold bg-gray-500 text-white rounded shadow-xl"
                 >
                     Reset
                 </button>
@@ -138,7 +138,7 @@ const Bikes = () => {
                         <div key={bike.id}>
                             <div className="card card-compact bg-sky-100/35 w-full shadow-xl">
                                 <img src={bike.image} alt="" className="h-64 w-full rounded-t-xl object-cover" />
-                                <div className="card-body text-xl h-76">
+                                <div className="card-body text-xl h-80">
                                     <h2 className="card-title text-3xl font-semibold">{bike.name}</h2>
                                     <div className="flex justify-between">
                                         <h2 className="text-xl"><span className="font-semibold">Brand:</span> {bike.brand}</h2>
@@ -164,7 +164,7 @@ const Bikes = () => {
             <div className="flex justify-center my-8">
                 <button
                     onClick={() => handlePageChange(currentPage - 1)}
-                    className="px-4 py-2 mx-2 font-semibold bg-blue-500 text-white rounded shadow-xl disabled:opacity-50"
+                    className="md:px-4 py-2 md:mx-2 font-semibold bg-blue-500 text-white rounded shadow-xl disabled:opacity-50"
                     disabled={currentPage === 1}
                 >
                     Previous
@@ -173,8 +173,8 @@ const Bikes = () => {
                     <button
                         key={index + 1}
                         onClick={() => handlePageChange(index + 1)}
-                        className={`px-4 py-2 mx-1 font-semibold rounded shadow-xl ${
-                            currentPage === index + 1 ? "bg-blue-600 text-white" : "bg-gray-200"
+                        className={`md:px-4 py-2 md:mx-1 font-semibold rounded shadow-xl ${
+                            currentPage === index + 1 ? "bg-blue-400 text-white" : "bg-gray-200"
                         }`}
                     >
                         {index + 1}
@@ -182,7 +182,7 @@ const Bikes = () => {
                 ))}
                 <button
                     onClick={() => handlePageChange(currentPage + 1)}
-                    className="px-4 py-2 mx-2 font-semibold bg-blue-500 text-white rounded shadow-xl disabled:opacity-50"
+                    className="md:px-4 md:py-2 mx-2 font-semibold bg-blue-400 text-white rounded shadow-xl disabled:opacity-50"
                     disabled={currentPage === totalPages}
                 >
                     Next

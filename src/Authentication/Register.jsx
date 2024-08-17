@@ -1,7 +1,7 @@
 import { useContext, useState } from "react";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "./AuthProviders";
 import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import auth from "../../firebase.config";

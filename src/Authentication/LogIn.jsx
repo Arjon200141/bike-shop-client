@@ -43,7 +43,7 @@ const LogIn = () => {
                 console.log(loggedmailUser);
                 setUser(loggedmailUser);
                 toast.success("Login successful!");
-                navigate(location?.state ? location.state : "/")
+                navigate( "/");
             })
             .catch(error => {
                 console.error(error)
