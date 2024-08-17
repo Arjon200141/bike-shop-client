@@ -8,7 +8,7 @@ export const AuthContext = createContext(null);
 const AuthProviders = ({ children }) => {
 
     const [user, setUser] = useState(null);
-    const [loading, setLoading] = useState(false);
+    const [loading, setLoading] = useState(true); // Start loading as true
 
     const createUser = (email, password) => {
         setLoading(true);
@@ -42,7 +42,7 @@ const AuthProviders = ({ children }) => {
         return () => {
             unsubscribe();
         }
-    }, [])
+    }, []);
 
     const authinfo = {
         user,

@@ -22,7 +22,7 @@ const LogIn = () => {
                 setUser(loggedInUser);
                 console.log(loggedInUser);
                 toast.success("Login successful!");
-                navigate(location?.state ? location.state : "/")
+                navigate( "/")
 
             })
             .catch(error => {

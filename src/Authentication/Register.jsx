@@ -1,7 +1,6 @@
 import { useContext, useState } from "react";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { FaEyeSlash, FaEye } from "react-icons/fa6";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { AuthContext } from "./AuthProviders";
 import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
@@ -24,6 +23,7 @@ const Register = () => {
         try {
             const result = await createUser(email, password);
             toast.success("Registration successful!");
+            navigate('/');
 
             await updateUserProfile(result.user, { displayName: name });
             console.log("Profile updated successfully!");

@@ -9,76 +9,33 @@ const Bikes = () => {
     const [brand, setBrand] = useState("");
     const [category, setCategory] = useState("");
     const [priceRange, setPriceRange] = useState("");
-    const [filteredBikes, setFilteredBikes] = useState([]);
     const [sortOrder, setSortOrder] = useState("");
     const [currentPage, setCurrentPage] = useState(1);
+    const [totalPages, setTotalPages] = useState(1);
     const itemsPerPage = 6;
 
     useEffect(() => {
-        fetch('http://localhost:5000/bikes')
+        const queryParams = new URLSearchParams({
+            searchTerm,
+            brand,
+            category,
+            priceRange,
+            sortOrder,
+            page: currentPage,
+            limit: itemsPerPage,
+        });
+
+        fetch(`http://localhost:5000/bikes?${queryParams.toString()}`)
             .then(res => res.json())
             .then(data => {
-                setBikes(data);
-                setFilteredBikes(data);
+                setBikes(data.bikes);
+                setTotalPages(data.totalPages);
             })
             .catch(error => console.error("Error fetching bikes data:", error));
-    }, []);
-
-    useEffect(() => {
-        filterBikes();
-    }, [searchTerm, brand, category, priceRange]);
-
-    useEffect(() => {
-        sortBikes();
-    }, [sortOrder]);
-
-    useEffect(() => {
-        setCurrentPage(1);
-    }, [searchTerm, brand, category, priceRange, sortOrder]);
-
-    const filterBikes = () => {
-        let results = bikes;
-
-        if (searchTerm) {
-            results = results.filter(bike =>
-                bike.name.toLowerCase().includes(searchTerm.toLowerCase())
-            );
-        }
-
-        if (brand) {
-            results = results.filter(bike => bike.brand === brand);
-        }
-
-        if (category) {
-            results = results.filter(bike => bike.category === category);
-        }
-
-        if (priceRange) {
-            const [minPrice, maxPrice] = priceRange.split('-').map(Number);
-            if (!isNaN(minPrice) && !isNaN(maxPrice)) {
-                results = results.filter(bike => bike.price >= minPrice && bike.price <= maxPrice);
-            }
-        }
-
-        setFilteredBikes(results);
-    };
-
-    const sortBikes = () => {
-        let results = [...filteredBikes];
-
-        if (sortOrder === "low-to-high") {
-            results = results.sort((a, b) => a.price - b.price);
-        } else if (sortOrder === "high-to-low") {
-            results = results.sort((a, b) => b.price - a.price);
-        } else if (sortOrder === "newest-first") {
-            results = results.sort((a, b) => new Date(b.product_creation_date) - new Date(a.product_creation_date));
-        }
-
-        setFilteredBikes(results);
-    };
+    }, [searchTerm, brand, category, priceRange, sortOrder, currentPage]);
 
     const handleSearch = () => {
-        filterBikes();
+        setCurrentPage(1);
     };
 
     const handleReset = () => {
@@ -87,14 +44,8 @@ const Bikes = () => {
         setCategory("");
         setPriceRange("");
         setSortOrder("");
-        setFilteredBikes(bikes);
         setCurrentPage(1);
     };
-
-    const indexOfLastBike = currentPage * itemsPerPage;
-    const indexOfFirstBike = indexOfLastBike - itemsPerPage;
-    const currentBikes = filteredBikes.slice(indexOfFirstBike, indexOfLastBike);
-    const totalPages = Math.ceil(filteredBikes.length / itemsPerPage);
 
     const handlePageChange = (pageNumber) => {
         if (pageNumber >= 1 && pageNumber <= totalPages) {
@@ -104,13 +55,6 @@ const Bikes = () => {
 
     return (
         <div className="mx-8 my-16">
-            <div>
-                <h2 className="text-5xl font-semibold text-center mb-8">Explore All Bikes</h2>
-                <p className="text-xl text-center mx-32 mb-6">
-                    Discover a diverse collection of bikes tailored to every rider's needs. Explore detailed information on each model to find the perfect bike for your adventures.
-                </p>
-            </div>
-
             <div className="mb-8 text-center">
                 <input
                     type="text"
@@ -186,15 +130,15 @@ const Bikes = () => {
                 </button>
             </div>
 
-            {currentBikes.length === 0 ? (
+            {bikes.length === 0 ? (
                 <p className="text-2xl text-center">No Bikes found</p>
             ) : (
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-                    {currentBikes.map(bike => (
+                    {bikes.map(bike => (
                         <div key={bike.id}>
                             <div className="card card-compact bg-sky-100/35 w-full shadow-xl">
                                 <img src={bike.image} alt="" className="h-64 w-full rounded-t-xl object-cover" />
-                                <div className="card-body text-xl">
+                                <div className="card-body text-xl h-76">
                                     <h2 className="card-title text-3xl font-semibold">{bike.name}</h2>
                                     <div className="flex justify-between">
                                         <h2 className="text-xl"><span className="font-semibold">Brand:</span> {bike.brand}</h2>
@@ -216,6 +160,7 @@ const Bikes = () => {
                 </div>
             )}
 
+            {/* Pagination Controls */}
             <div className="flex justify-center my-8">
                 <button
                     onClick={() => handlePageChange(currentPage - 1)}
@@ -224,7 +169,17 @@ const Bikes = () => {
                 >
                     Previous
                 </button>
-                <span className="px-4 py-2">{currentPage} / {totalPages}</span>
+                {Array.from({ length: totalPages }, (_, index) => (
+                    <button
+                        key={index + 1}
+                        onClick={() => handlePageChange(index + 1)}
+                        className={`px-4 py-2 mx-1 font-semibold rounded shadow-xl ${
+                            currentPage === index + 1 ? "bg-blue-600 text-white" : "bg-gray-200"
+                        }`}
+                    >
+                        {index + 1}
+                    </button>
+                ))}
                 <button
                     onClick={() => handlePageChange(currentPage + 1)}
                     className="px-4 py-2 mx-2 font-semibold bg-blue-500 text-white rounded shadow-xl disabled:opacity-50"

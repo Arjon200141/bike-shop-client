@@ -3,6 +3,7 @@ import Home from "../Home/Home";
 import Root from "../Root/Root";
 import Register from "../Authentication/Register";
 import LogIn from "../Authentication/LogIn";
+import PrivateRoute from "./PrivateRoute";
 
 const router = createBrowserRouter([
     {
@@ -12,7 +13,7 @@ const router = createBrowserRouter([
         [
             {
                 path:"/",
-                element:<Home></Home>,
+                element:<PrivateRoute><Home></Home></PrivateRoute>,
             },
             {
                 path:"/register",
